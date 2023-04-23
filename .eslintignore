@@ -1,0 +1,8 @@
+# dependencies
+/node_modules/*
+/net/http/gateway.ts
+/net/http/gatewayComponents.ts
+*.d.ts
+*.config.js
+jest.setup.js
+wasm_exec.js

@@ -1,0 +1,51 @@
+{
+  "name": "kyberswap-widgets",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "pull": "git pull && yarn",
+    "dev": "next dev -p 1110",
+    "build": "next build && next export",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.6",
+    "@rainbow-me/rainbowkit": "^0.11.0",
+    "@reach/portal": "^0.18.0",
+    "@uniswap/widgets": "1.1.1",
+    "ahooks": "^3.7.4",
+    "ethers": "^5.7.0",
+    "jotai-immer": "^0.2.0",
+    "lodash": "^4.17.21",
+    "next": "^13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-popper": "^2.3.0",
+    "react-redux": "^8.0.5",
+    "styled-components": "^5.3.5",
+    "wagmi": "^0.11.6"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^6.5.1",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.13.0",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@types/styled-components": "^5.1.26",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "@web3-onboard/injected-wallets": "^2.2.4",
+    "@web3-onboard/react": "^2.3.6",
+    "eslint": "8.32.0",
+    "eslint-config-next": "^13.1.6",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "file-loader": "^6.2.0",
+    "framer-motion": "^9.0.7",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "url-loader": "^4.1.1"
+  }
+}
