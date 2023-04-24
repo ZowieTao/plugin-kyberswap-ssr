@@ -172,7 +172,7 @@ const Widget = ({
     tokenOut,
     setTokenIn,
     setTokenOut,
-    inputAmout,
+    inputAmount,
     setInputAmount,
     trade: routeTrade,
     slippage,
@@ -242,7 +242,7 @@ const Widget = ({
     trade?.inputAmount &&
     trade?.outputAmount &&
     parseFloat(formatUnits(trade.outputAmount, tokenOutInfo?.decimals || 18)) /
-      parseFloat(inputAmout);
+      parseFloat(inputAmount);
 
   const formattedTokenInBalance = parseFloat(
     parseFloat(tokenInWithUnit).toPrecision(10),
@@ -337,7 +337,7 @@ const Widget = ({
             <Confirmation
               trade={trade}
               tokenInInfo={tokenInInfo}
-              amountIn={inputAmout}
+              amountIn={inputAmount}
               tokenOutInfo={tokenOutInfo}
               amountOut={amountOut}
               rate={rate}
@@ -449,7 +449,7 @@ const Widget = ({
 
         <InputRow>
           <Input
-            value={inputAmout}
+            value={inputAmount}
             onChange={(e: any) => {
               const value = e.target.value.replace(/,/g, '.');
               const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." characters via in a non-capturing group

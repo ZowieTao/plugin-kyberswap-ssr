@@ -133,7 +133,7 @@ const useSwap = ({
     fetchAllDexes();
   }, [isUnsupported, chainId]);
 
-  const [inputAmout, setInputAmount] = useState('1');
+  const [inputAmount, setInputAmount] = useState('1');
   const [loading, setLoading] = useState(false);
   const [trade, setTrade] = useState<Trade | null>(null);
   const [error, setError] = useState('');
@@ -166,14 +166,14 @@ const useSwap = ({
             return token.address === tokenIn;
           })?.decimals;
 
-    if (!tokenInDecimal || !tokenIn || !tokenOut || !inputAmout) {
+    if (!tokenInDecimal || !tokenIn || !tokenOut || !inputAmount) {
       setError('Invalid input');
       setTrade(null);
 
       return;
     }
 
-    const amountIn = parseUnits(inputAmout, tokenInDecimal);
+    const amountIn = parseUnits(inputAmount, tokenInDecimal);
 
     if (!amountIn) {
       setError('Invalid input amount');
@@ -254,7 +254,7 @@ const useSwap = ({
     tokenIn,
     tokenOut,
     provider,
-    inputAmout,
+    inputAmount,
     balanceStr,
     slippage,
     deadline,
@@ -276,7 +276,7 @@ const useSwap = ({
     tokenOut,
     setTokenOut,
     setTokenIn,
-    inputAmout,
+    inputAmount,
     trade,
     setInputAmount,
     loading,
