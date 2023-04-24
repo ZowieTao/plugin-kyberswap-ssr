@@ -1,4 +1,4 @@
-This is a [opencorddoxxyz](https://opencord.xyz/) plugin project with [kyberswap-widgets](https://github.com/KyberNetwork/kyberswap-widgets).
+This is a [personal page](https://zowietao.github.io/)  project.
 
 ## Getting Started
 

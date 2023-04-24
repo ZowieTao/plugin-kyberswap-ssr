@@ -12,9 +12,6 @@
 /.next/
 /out/
 
-# mocks
-/mocks/index.js
-
 # production
 /build
 
@@ -29,18 +26,10 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-/.idea/
+.env*.local
 
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-
-# typed-scss-modules
-*.scss.d.ts
-
+# env 
+.env*

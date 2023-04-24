@@ -1,20 +1,12 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import {
-  SUPPORTED_LOCALES,
-  SupportedLocale,
-  SwapWidget,
-} from '@uniswap/widgets';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import '@uniswap/widgets/fonts.css';
+
+import { SupportedLocale, SwapWidget } from '@uniswap/widgets';
 import { ethers } from 'ethers';
-import { motion } from 'framer-motion';
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
-import { fadeInDown, staggerContainer } from '@/styles/variants';
-
-const Home: NextPage = () => {
+export default function Home() {
   const { connector } = useAccount();
   const { chain } = useNetwork();
 
@@ -59,115 +51,9 @@ const Home: NextPage = () => {
   // const focusConnectors = useCallback(() => {
   //   return connectors.current?.focus();
   // }, []);
-
   return (
-    <>
-      <AppHeader />
-      <main
-        style={{
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          boxSizing: 'border-box',
-          height: '100vh',
-          overflow: 'hidden',
-          background: 'url("/bg.svg")',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <motion.section
-          className="hide-scrollbar"
-          style={{
-            height: '100%',
-            overflowY: 'scroll',
-          }}
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-        >
-          <Image
-            style={{
-              position: 'absolute',
-              bottom: '0',
-              right: '0',
-            }}
-            src="/bg-item.svg"
-            alt="background image"
-            height="400"
-            width="400"
-          />
-          <motion.header
-            variants={fadeInDown}
-            style={{
-              position: 'relative',
-              marginBottom: '10px',
-              padding: '20px 15px 0 30px',
-              display: 'flex',
-            }}
-          >
-            <div
-              style={{
-                flex: '1',
-              }}
-            />
-            <div
-              style={{
-                display: 'flex',
-                height: '40px',
-              }}
-            >
-              <ConnectButton label="Connect wallet" />
-            </div>
-          </motion.header>
-          <div className="header-space" />
-          <motion.div
-            variants={fadeInDown}
-            style={{
-              width: '100vw',
-              padding: '24px',
-              display: 'flex',
-              maxWidth: '100vw',
-              boxSizing: 'border-box',
-              justifyContent: 'center',
-            }}
-          >
-            <select onChange={onSelectLocale}>
-              {SUPPORTED_LOCALES.map((locale) => {
-                return (
-                  <option key={locale} value={locale}>
-                    {locale}
-                  </option>
-                );
-              })}
-            </select>
-            {chainId}
-            <SwapWidget
-              tokenList={TOKEN_LIST}
-              provider={provider}
-              locale={locale}
-              defaultInputTokenAddress="NATIVE"
-              defaultInputAmount="1"
-              defaultOutputTokenAddress={UNI}
-            />
-          </motion.div>
-        </motion.section>
-      </main>
-    </>
+    <div className="Uniswap">
+      <SwapWidget provider={provider} />
+    </div>
   );
-};
-
-export default Home;
-
-const AppHeader = () => {
-  return (
-    <Head>
-      <title>Opencord Kyberswap Widgets Plugin</title>
-      <meta
-        name="description"
-        content="opencord plugin for kyberswap widgets"
-      />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-  );
-};
+}
