@@ -1,6 +1,5 @@
 import '@/styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
-import '@uniswap/widgets/fonts.css';
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { AppProps } from 'next/app';

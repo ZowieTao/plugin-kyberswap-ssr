@@ -1,17 +1,15 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import {
-  SUPPORTED_LOCALES,
-  SupportedLocale,
-  SwapWidget,
-} from '@uniswap/widgets';
 import { ethers } from 'ethers';
 import { motion } from 'framer-motion';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
+import Widget from '@/components/widgets';
+import { defaultTokenOut } from '@/constants/kyberswap';
+import { widgetLightTheme } from '@/constants/style/kyberswap-widget';
 import { fadeInDown, staggerContainer } from '@/styles/variants';
 
 const Home: NextPage = () => {
@@ -19,7 +17,6 @@ const Home: NextPage = () => {
   const { chain } = useNetwork();
 
   useEffect(() => {}, [chain]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [chainId, setChainId] = useState(1);
   const [provider, setProvider] = useState<
     ethers.providers.Web3Provider | undefined
@@ -46,20 +43,6 @@ const Home: NextPage = () => {
       });
   }, [provider]);
 
-  // uniswap
-  // const JSON_RPC_URL = 'https://cloudflare-eth.com';
-  const TOKEN_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org';
-  const UNI = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-  const [locale, setLocale] = useState<SupportedLocale>('en-US');
-  const onSelectLocale = useCallback((e: any) => {
-    return setLocale(e.target.value);
-  }, []);
-
-  // const connectors = useRef<HTMLDivElement>(null);
-  // const focusConnectors = useCallback(() => {
-  //   return connectors.current?.focus();
-  // }, []);
-
   return (
     <>
       <AppHeader />
@@ -76,7 +59,7 @@ const Home: NextPage = () => {
         }}
       >
         <motion.section
-          className="hide-scrollbar"
+          className="hide-scollbar"
           style={{
             height: '100%',
             overflowY: 'scroll',
@@ -131,23 +114,11 @@ const Home: NextPage = () => {
               justifyContent: 'center',
             }}
           >
-            <select onChange={onSelectLocale}>
-              {SUPPORTED_LOCALES.map((locale) => {
-                return (
-                  <option key={locale} value={locale}>
-                    {locale}
-                  </option>
-                );
-              })}
-            </select>
-            {chainId}
-            <SwapWidget
-              tokenList={TOKEN_LIST}
+            <Widget
+              theme={widgetLightTheme}
+              tokenList={[]}
               provider={provider}
-              locale={locale}
-              defaultInputTokenAddress="NATIVE"
-              defaultInputAmount="1"
-              defaultOutputTokenAddress={UNI}
+              defaultTokenOut={defaultTokenOut[chainId ?? 1]}
             />
           </motion.div>
         </motion.section>

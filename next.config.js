@@ -3,6 +3,11 @@
 const nextConfig = {
   reactStrictMode: true,
   webpack: function (config, options) {
+    config.resolve.fallback = {
+      crypto: false,
+      path: false,
+      fs: false
+    };
     config.module.rules.push({
       test: /\.(png|jpg|gif|eot|ttf|woff|woff2)$/i,
       use: {

@@ -24,11 +24,9 @@
     "**/*cache": true
   },
   "cSpell.words": [
-    "arbitrum",
-    "conedison",
-    "ethersproject",
     "popperjs",
     "rainbowkit",
-    "svgr"
+    "svgr",
+    "unoptimized"
   ]
 }
