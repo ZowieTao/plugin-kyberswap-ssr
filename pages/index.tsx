@@ -59,7 +59,7 @@ const Home: NextPage = () => {
         }}
       >
         <motion.section
-          className="hide-scollbar"
+          className="hide-scrollbar"
           style={{
             height: '100%',
             overflowY: 'scroll',

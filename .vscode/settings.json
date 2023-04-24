@@ -24,9 +24,11 @@
     "**/*cache": true
   },
   "cSpell.words": [
+    "arbitrum",
     "popperjs",
     "rainbowkit",
     "svgr",
-    "unoptimized"
+    "unoptimized",
+    "Xchange"
   ]
 }

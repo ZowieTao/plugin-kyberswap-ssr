@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body className="hide-scollbar">
+      <body className="hide-scrollbar">
         <Main />
         <NextScript />
       </body>
