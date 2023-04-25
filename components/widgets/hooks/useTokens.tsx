@@ -72,7 +72,9 @@ export const TokenListProvider = ({
   return (
     <TokenContext.Provider
       value={{
-        tokenList: tokenList?.length ? tokenList : DEFAULT_TOKENS[chainId],
+        tokenList: tokenList?.length
+          ? [...DEFAULT_TOKENS[chainId]].concat(tokenList)
+          : DEFAULT_TOKENS[chainId],
         importedTokens,
         addToken,
         removeToken,
