@@ -24,7 +24,10 @@ const authTokenRequestInterceptor = ({
   return async (
     requestConfig: AxiosRequestConfig,
   ): Promise<AxiosRequestConfig> => {
-    const isOauth = (requestConfig.url ?? '').endsWith('/oauth/token');
+    // todo
+    const isOauth = (requestConfig.url ?? '').endsWith(
+      '/not require token route',
+    );
     const authToken = isOauth ? getOAuthToken() : getAuthToken();
     if (authToken && requestConfig.headers) {
       requestConfig.headers[header] = `${headerPrefix}${authToken}`;
