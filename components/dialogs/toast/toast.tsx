@@ -51,7 +51,7 @@ export const Toast = () => {
         maxWidth="500px"
         padding="6px 20px"
         borderRadius="16px"
-        background="#3B3B3B"
+        background="#eeeeee"
         boxShadow="0px 4px 6px rgba(40, 40, 40, 0.25)"
       >
         {info.current}
