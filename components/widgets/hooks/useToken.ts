@@ -8,6 +8,7 @@ import { useActiveWeb3 } from './useWeb3Provider';
 
 export const useToken = (address: string) => {
   const tokenContract = useContract(address, tokenABI);
+
   const { chainId } = useActiveWeb3();
 
   const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null);

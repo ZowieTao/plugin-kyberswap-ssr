@@ -43,3 +43,5 @@ yarn-error.log*
 # typed-scss-modules
 *.scss.d.ts
 
+__*
+

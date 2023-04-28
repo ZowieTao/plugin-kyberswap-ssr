@@ -1,17 +1,17 @@
 import { BigNumber } from 'ethers';
 import { formatUnits, isAddress } from 'ethers/lib/utils';
 import { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
 import {
   NATIVE_TOKEN,
   NATIVE_TOKEN_ADDRESS,
   TokenInfo as TokenDetail,
 } from '@/constants';
-import Loading from '@/public/assets/loader.svg';
 import Question from '@/public/assets/question.svg';
 import TrashIcon from '@/public/assets/trash.svg';
 
+import { Spinner } from '../core/Spinner';
 import { useToken } from './hooks/useToken';
 import useTokenBalances from './hooks/useTokenBalances';
 import { useImportedTokens, useTokens } from './hooks/useTokens';
@@ -31,28 +31,6 @@ const Trash = styled(TrashIcon)`
     color: ${({ theme }) => {
       return theme.error;
     }};
-  }
-`;
-
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
-const Spinner = styled(Loading)`
-  animation: 2s ${rotate} linear infinite;
-  width: 20px;
-  height: 20px;
-  color: ${({ theme }) => {
-    return theme.accent;
-  }};
-
-  path {
-    stroke-width: 8;
   }
 `;
 
@@ -211,7 +189,7 @@ const ImportToken = ({
   );
 };
 
-function SelectCurrency({
+export function SelectCurrency({
   selectedToken,
   onChange,
   onImport,
@@ -341,7 +319,7 @@ function SelectCurrency({
                     }}
                   />
                 ) : loading ? (
-                  <Spinner />
+                  <Spinner theme="light" height="20px" width="20px" />
                 ) : (
                   <TokenBalance>
                     {token.balance &&

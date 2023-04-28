@@ -8,6 +8,7 @@ import {
   SUPPORTED_NETWORKS,
   ZERO_ADDRESS,
 } from '@/constants';
+import { useUpdateState } from '@/hooks/core/useUpdateState';
 
 import useTokenBalances from './useTokenBalances';
 import { useTokens } from './useTokens';
@@ -44,10 +45,10 @@ const useSwap = ({
   };
 }) => {
   const { provider, chainId } = useActiveWeb3();
-  const [tokenIn, setTokenIn] = useState(
+  const [tokenIn, setTokenIn] = useUpdateState(
     defaultTokenIn || NATIVE_TOKEN_ADDRESS,
   );
-  const [tokenOut, setTokenOut] = useState(defaultTokenOut || '');
+  const [tokenOut, setTokenOut] = useUpdateState(defaultTokenOut || '');
   const tokens = useTokens();
 
   const isUnsupported = !SUPPORTED_NETWORKS.includes(chainId.toString());

@@ -17,7 +17,7 @@ export const Web3Provider = ({
   provider,
   children,
 }: {
-  provider: providers.Web3Provider | null;
+  provider?: providers.Web3Provider | null;
   children: ReactNode;
 }) => {
   const [chainId, setChainId] = useState<number>(1);
@@ -35,6 +35,10 @@ export const Web3Provider = ({
       setChainId(1);
     }
   }, [provider]);
+
+  if (!provider) {
+    return <> {children}</>;
+  }
 
   return (
     <Web3Context.Provider value={{ provider, chainId, account }}>

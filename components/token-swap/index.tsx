@@ -1,20 +1,60 @@
+'use client';
+
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ethers } from 'ethers';
 import { motion } from 'framer-motion';
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ThemeProvider } from 'styled-components';
 import { useAccount, useNetwork } from 'wagmi';
 
 import Widget from '@/components/widgets';
+import { TokenInfo } from '@/constants';
 import { defaultTokenOut } from '@/constants/kyberswap';
 import { widgetLightTheme } from '@/constants/style/kyberswap-widget';
+import { useClientLogin } from '@/hooks/useClientLogin';
+import { useOpencord } from '@/hooks/useOpencord';
+import { useChannelInfoStore } from '@/stores/channelInfo';
+import { useTokenEditStore } from '@/stores/tokenEdit';
 import { fadeInDown, staggerContainer } from '@/styles/variants';
 
-const Home: NextPage = () => {
+import { Center } from '../core/Flex';
+import TokenEditor, { buttonVariants } from '../edit-token';
+import { TokenListProvider } from '../widgets/hooks/useTokens';
+import { Web3Provider } from '../widgets/hooks/useWeb3Provider';
+import { defaultTheme } from '../widgets/theme';
+
+export default function Plugin() {
   const { connector } = useAccount();
   const { chain } = useNetwork();
+
+  // use opencord
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { isInitialized, isInOpencord, isInitFailed } = useOpencord();
+
+  // to login
+  useClientLogin();
+
+  const channelInfo = useChannelInfoStore((state) => {
+    return state.channelInfo;
+  });
+
+  const tokenList = useMemo(() => {
+    const result: TokenInfo[] = [];
+    channelInfo?.from && result.push({ ...channelInfo.from, isImport: true });
+    channelInfo?.to && result.push({ ...channelInfo.to, isImport: true });
+
+    return result;
+  }, [channelInfo]);
+
+  const _defaultTokenIn = useMemo(() => {
+    return channelInfo?.from?.address;
+  }, [channelInfo?.from?.address]);
+
+  const _defaultTokenOut = useMemo(() => {
+    return channelInfo?.to?.address;
+  }, [channelInfo?.to?.address]);
 
   useEffect(() => {}, [chain]);
   const [chainId, setChainId] = useState(1);
@@ -42,6 +82,13 @@ const Home: NextPage = () => {
         return setChainId(res.chainId);
       });
   }, [provider]);
+
+  const isEditing = useTokenEditStore((state) => {
+    return state.editing;
+  });
+  const changeEditing = useTokenEditStore((state) => {
+    return state.changeEditing;
+  });
 
   return (
     <>
@@ -79,6 +126,7 @@ const Home: NextPage = () => {
             height="400"
             width="400"
           />
+
           <motion.header
             variants={fadeInDown}
             style={{
@@ -99,6 +147,30 @@ const Home: NextPage = () => {
                 height: '40px',
               }}
             >
+              <motion.div
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="rest"
+                onClick={() => {
+                  changeEditing();
+                }}
+              >
+                <Center
+                  height="40px"
+                  width="40px"
+                  background="#ffffff"
+                  boxShadow="0px 4px 12px rgba(0, 0, 0, 0.1)"
+                  borderRadius="12px"
+                  marginRight="10px"
+                >
+                  <Image
+                    src="/assets/setting.svg"
+                    alt="background image"
+                    height="20"
+                    width="20"
+                  />
+                </Center>
+              </motion.div>
               <ConnectButton label="Connect wallet" />
             </div>
           </motion.header>
@@ -114,20 +186,30 @@ const Home: NextPage = () => {
               justifyContent: 'center',
             }}
           >
-            <Widget
-              theme={widgetLightTheme}
-              tokenList={[]}
-              provider={provider}
-              defaultTokenOut={defaultTokenOut[chainId ?? 1]}
-            />
+            <Web3Provider provider={provider}>
+              <TokenListProvider tokenList={tokenList}>
+                <ThemeProvider theme={widgetLightTheme || defaultTheme}>
+                  <>
+                    {isEditing ? (
+                      <TokenEditor />
+                    ) : (
+                      <Widget
+                        defaultTokenIn={_defaultTokenIn}
+                        defaultTokenOut={
+                          _defaultTokenOut ?? defaultTokenOut[chainId ?? 1]
+                        }
+                      />
+                    )}
+                  </>
+                </ThemeProvider>
+              </TokenListProvider>
+            </Web3Provider>
           </motion.div>
         </motion.section>
       </main>
     </>
   );
-};
-
-export default Home;
+}
 
 const AppHeader = () => {
   return (

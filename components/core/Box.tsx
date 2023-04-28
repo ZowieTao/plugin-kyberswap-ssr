@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { CSSProperties, forwardRef, MouseEventHandler, ReactNode } from 'react';
 
 import { isArray } from '@/utils/core/is';
@@ -48,7 +49,7 @@ export const getBoxProps = (props: BoxProps) => {
   };
 };
 
-export const Box = forwardRef(function _Box(props: BoxProps, ref: any) {
+export const Box = forwardRef((props: BoxProps, ref: any) => {
   const { children } = props;
   const boxProps = getBoxProps(props);
 

@@ -2,7 +2,9 @@
 /node_modules/*
 /net/http/gateway.ts
 /net/http/gatewayComponents.ts
+/services/client
 *.d.ts
 *.config.js
 jest.setup.js
 wasm_exec.js
+

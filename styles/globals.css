@@ -13,6 +13,11 @@ div:focus {
   display: none;
 }
 
+:root {
+  font-family: Outfit, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
 html,
 body,
 div,
@@ -146,4 +151,14 @@ table {
   .header-space {
     height: 0px;
   }
+}
+
+.dialog-animation {
+  animation-duration: 0.15s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+  animation-play-state: running;
 }

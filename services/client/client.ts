@@ -1,63 +1,22 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 
 import { showToast } from '@/components/dialogs/toast/toast';
+import {
+  BusinessInfo,
+  Client,
+  ComposedResponse,
+  Param,
+  SupportMethods,
+} from '@/net/http/client';
 import { error, info } from '@/utils/core/log';
 
-import { applyAuthTokenInterceptor } from './interceptors/token';
-
-export type Param = {
-  [k: string]: any;
-};
-
-export type BusinessInfo = {
-  code: number;
-  message: string;
-  title: string;
-  ok: string;
-};
-
-export type ComposedResponse<T> = AxiosResponse<T> & BusinessInfo;
-
-export type SupportMethods =
-  | 'get'
-  | 'head'
-  | 'options'
-  | 'delete'
-  | 'post'
-  | 'put'
-  | 'patch';
-
-const supportMethods: SupportMethods[] = [
-  'get',
-  'head',
-  'options',
-  'delete',
-  'post',
-  'put',
-  'patch',
-];
-
-export type ClientFuncWithPathParam = <T = any, R = ComposedResponse<T>>(
-  url: string,
-  pathParam?: Param,
-  param?: Param,
-) => Promise<R>;
-
-export type Client = {
-  get: ClientFuncWithPathParam;
-  head: ClientFuncWithPathParam;
-  options: ClientFuncWithPathParam;
-  delete: ClientFuncWithPathParam;
-  post: ClientFuncWithPathParam;
-  put: ClientFuncWithPathParam;
-  patch: ClientFuncWithPathParam;
-};
-
-const instance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_APP_URI,
+const serverInstance: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_HOST,
+  headers: {
+    'oc-plugin-appid': process.env.NEXT_PUBLIC_PLUGIN_ID,
+    'oc-plugin-secret': process.env.APP_SECRET,
+  },
 });
-
-applyAuthTokenInterceptor(instance);
 
 function replacePathParams(path: string, param: Param) {
   const restParam = { ...param };
@@ -97,7 +56,7 @@ async function withTransformData<T = any>(
   const { parsedPath, restParam } = replacePathParams(url, pathParam || {});
 
   let response = {} as ComposedResponse<T>;
-  info(' http <=', {
+  info('server side http <=', {
     url,
     param: JSON.stringify({
       pathParam,
@@ -108,7 +67,7 @@ async function withTransformData<T = any>(
   try {
     switch (method) {
       case 'delete': {
-        response = await instance.delete(parsedPath, {
+        response = await serverInstance.delete(parsedPath, {
           data: { ...restParam, ...param },
         });
         break;
@@ -116,7 +75,7 @@ async function withTransformData<T = any>(
       case 'get':
       case 'options':
       case 'head': {
-        response = await instance[method](parsedPath, {
+        response = await serverInstance[method](parsedPath, {
           data: { ...restParam, ...param },
         });
         break;
@@ -125,7 +84,7 @@ async function withTransformData<T = any>(
       case 'post':
       case 'put':
       case 'patch': {
-        response = await instance[method](parsedPath, {
+        response = await serverInstance[method](parsedPath, {
           ...restParam,
           ...(param || {}),
         });
@@ -146,14 +105,14 @@ async function withTransformData<T = any>(
     } else {
       // deal with logic with node success status, and without code,
       // maybe show alert info later
-      error(' http error =>', {
+      error('server side http error =>', {
         url,
         err,
       });
       throw err;
     }
 
-    error(' http error =>', {
+    error('server side http error =>', {
       url,
       err,
       errResponse,
@@ -161,7 +120,7 @@ async function withTransformData<T = any>(
     throw err;
   }
 
-  info(' http =>', {
+  info('server side http =>', {
     url,
     response: JSON.stringify(response),
   });
@@ -169,14 +128,24 @@ async function withTransformData<T = any>(
   return response;
 }
 
-const client = {} as Client;
+const ServerClient = {} as Client;
+
+const supportMethods: SupportMethods[] = [
+  'get',
+  'head',
+  'options',
+  'delete',
+  'post',
+  'put',
+  'patch',
+];
 
 supportMethods.forEach((method) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  client[method] = (url: string, pathParam: Param, bodyParam: Param) => {
+  ServerClient[method] = (url: string, pathParam: Param, bodyParam: Param) => {
     return withTransformData(url, pathParam, bodyParam, method);
   };
 });
 
-export default client;
+export default ServerClient;

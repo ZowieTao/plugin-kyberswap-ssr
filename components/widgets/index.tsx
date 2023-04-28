@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
-import { StrictMode, useState } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 import {
   NATIVE_TOKEN,
@@ -25,8 +25,8 @@ import useApproval, { APPROVAL_STATE } from './hooks/useApproval';
 import useSwap from './hooks/useSwap';
 import useTheme from './hooks/useTheme';
 import useTokenBalances from './hooks/useTokenBalances';
-import { TokenListProvider, useTokens } from './hooks/useTokens';
-import { useActiveWeb3, Web3Provider } from './hooks/useWeb3Provider';
+import { useTokens } from './hooks/useTokens';
+import { useActiveWeb3 } from './hooks/useWeb3Provider';
 import ImageWithFallback from './image-with-fallback';
 import ImportModal from './ImportModal';
 import InfoHelper from './InfoHelper';
@@ -59,7 +59,7 @@ import {
   Title,
   Wrapper,
 } from './styled';
-import { defaultTheme, Theme } from './theme';
+import { Theme } from './theme';
 
 export const DialogWrapper = styled.div`
   background-color: ${({ theme }: { theme: Record<string, any> }) => {
@@ -711,27 +711,16 @@ const Widget = ({
 };
 
 const _Widget = ({
-  provider,
-  tokenList,
-  theme,
   defaultTokenIn,
   defaultTokenOut,
   feeSetting,
 }: WidgetProps) => {
   return (
-    <StrictMode>
-      <ThemeProvider theme={theme || defaultTheme}>
-        <Web3Provider provider={provider}>
-          <TokenListProvider tokenList={tokenList}>
-            <Widget
-              defaultTokenIn={defaultTokenIn}
-              defaultTokenOut={defaultTokenOut}
-              feeSetting={feeSetting}
-            />
-          </TokenListProvider>
-        </Web3Provider>
-      </ThemeProvider>
-    </StrictMode>
+    <Widget
+      defaultTokenIn={defaultTokenIn}
+      defaultTokenOut={defaultTokenOut}
+      feeSetting={feeSetting}
+    />
   );
 };
 

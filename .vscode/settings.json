@@ -30,5 +30,6 @@
     "svgr",
     "unoptimized",
     "Xchange"
-  ]
+  ],
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

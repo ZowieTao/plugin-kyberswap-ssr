@@ -20,7 +20,7 @@ export const Spinner = (props: SpinnerProps) => {
     delay,
     thickness = '4px',
     theme,
-    color = theme === 'light' ? '#2d5cf6' : '#fff',
+    color = theme === 'light' ? '#28E0B9' : '#fff',
     background = theme === 'light'
       ? 'rgba(0, 0, 0, 0.1)'
       : 'rgba(255, 255, 255, 0.1)',

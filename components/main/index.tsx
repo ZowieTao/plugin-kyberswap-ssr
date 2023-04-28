@@ -1,13 +1,13 @@
-import '@/styles/globals.css';
-import '@rainbow-me/rainbowkit/styles.css';
+'use client';
 
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { AppProps } from 'next/app';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import { Toast } from '@/components/dialogs/toast/toast';
+
+import Plugin from '../token-swap';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [mainnet, polygon, optimism, arbitrum],
@@ -26,12 +26,12 @@ const client = createClient({
   webSocketProvider,
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function MainClient() {
   return (
     <WagmiConfig client={client}>
       <RainbowKitProvider chains={chains}>
         <Toast />
-        <Component {...pageProps} />
+        <Plugin />
       </RainbowKitProvider>
     </WagmiConfig>
   );

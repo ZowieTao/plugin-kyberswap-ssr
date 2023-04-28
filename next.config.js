@@ -21,7 +21,10 @@ const loadEnv = () => {
 
 const nextConfig = {
   env: loadEnv(),
-  reactStrictMode: true,
+  reactStrictMode: false,
+  experimental: {
+    appDir: true,
+  },
   webpack: function (config, options) {
     config.resolve.fallback = {
       crypto: false,
@@ -52,6 +55,8 @@ const nextConfig = {
     disableStaticImages: true,
     unoptimized: true,
   },
+  output: 'export',
+  distDir: 'out',
 };
 
 module.exports = nextConfig;

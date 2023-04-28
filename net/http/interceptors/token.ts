@@ -1,3 +1,6 @@
+`use client`;
+/* eslint-disable import/first */
+
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Router from 'next/router';
 
