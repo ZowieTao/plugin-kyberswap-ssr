@@ -45,6 +45,8 @@ export default function Plugin() {
     channelInfo?.from && result.push({ ...channelInfo.from, isImport: true });
     channelInfo?.to && result.push({ ...channelInfo.to, isImport: true });
 
+    return [];
+
     return result;
   }, [channelInfo]);
 

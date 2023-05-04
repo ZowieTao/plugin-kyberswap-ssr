@@ -2,6 +2,7 @@
 import { useAsyncEffect } from 'ahooks';
 import { produce } from 'immer';
 
+import { useImportedTokens } from '@/components/widgets/hooks/useTokens';
 import { login } from '@/net/http/gateway';
 import { useAuthInfoStore } from '@/stores/authInfo';
 import { useChannelInfoStore } from '@/stores/channelInfo';
@@ -21,6 +22,8 @@ export const useClientLogin = () => {
     return state.updateTokenInfo;
   });
 
+  const { addToken } = useImportedTokens();
+
   useAsyncEffect(async () => {
     if (authInfo?.code) {
       const loginResponse = await login({ code: authInfo.code });
@@ -33,6 +36,8 @@ export const useClientLogin = () => {
         const { from, to } = data.channelInfo;
         updateTokenInfo(from, 'in');
         updateTokenInfo(to, 'out');
+        from && addToken(from);
+        to && addToken(to);
       }
 
       if (data.token) {

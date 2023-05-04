@@ -15,6 +15,7 @@ import { Column, Expand, Row } from '../core/Flex';
 import { useModalStateValue } from '../dialogs/dialog/Dialog';
 import { showToast } from '../dialogs/toast/toast';
 import { TokenSelectModal } from '../select-token-modal/TokenSelectModal';
+import { useImportedTokens } from '../widgets/hooks/useTokens';
 
 export const buttonVariants = {
   rest: {
@@ -55,6 +56,8 @@ const TokenEditor = () => {
       channelInfo: state.channelInfo,
     };
   }, shallow);
+
+  const { addToken } = useImportedTokens();
 
   const { name } = activeChain ?? {};
 
@@ -114,7 +117,7 @@ const TokenEditor = () => {
         <HoverScaleBox
           onClick={async () => {
             if (!channelInfo?.channelId) {
-              return showToast('channel not exist');
+              return showToast('Channel Not Exist');
             }
             const result = await setup({
               channelId: channelInfo.channelId,
@@ -125,12 +128,14 @@ const TokenEditor = () => {
             });
             if (result.data.data.success) {
               changeEditing(false);
+              tokenIn && addToken(tokenIn);
+              tokenOut && addToken(tokenOut);
               updateChannelInfo({
                 channelId: channelInfo.channelId,
                 from: tokenIn,
                 to: tokenOut,
               });
-              showToast('edit success');
+              showToast('Edit Success');
             }
           }}
         >
