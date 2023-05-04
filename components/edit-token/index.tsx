@@ -3,14 +3,17 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ReactNode, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 
 import { Text } from '@/components/core/Text';
+import { setup } from '@/net/http/gateway';
+import { useChannelInfoStore } from '@/stores/channelInfo';
 import { useTokenEditStore } from '@/stores/tokenEdit';
 import { hexWithOpacity } from '@/utils/core/format';
 
 import { Column, Expand, Row } from '../core/Flex';
 import { useModalStateValue } from '../dialogs/dialog/Dialog';
+import { showToast } from '../dialogs/toast/toast';
 import { TokenSelectModal } from '../select-token-modal/TokenSelectModal';
 
 export const buttonVariants = {
@@ -36,10 +39,20 @@ const TokenEditor = () => {
 
   const { chain: activeChain } = useNetwork();
 
-  const { tokenIn, tokenOut } = useTokenEditStore((state) => {
+  const { changeEditing, tokenIn, tokenOut, updateTokenInfo } =
+    useTokenEditStore((state) => {
+      return {
+        changeEditing: state.changeEditing,
+        tokenIn: state.tokenIn,
+        tokenOut: state.tokenOut,
+        updateTokenInfo: state.updateTokenInfo,
+      };
+    }, shallow);
+
+  const { updateChannelInfo, channelInfo } = useChannelInfoStore((state) => {
     return {
-      tokenIn: state.tokenIn,
-      tokenOut: state.tokenOut,
+      updateChannelInfo: state.updateChannelInfo,
+      channelInfo: state.channelInfo,
     };
   }, shallow);
 
@@ -63,7 +76,6 @@ const TokenEditor = () => {
         open={tokenSelectModalOpen}
         type={type}
       />
-
       <Column width="100%">
         <Image
           src="/assets/empty-state.svg"
@@ -99,10 +111,42 @@ const TokenEditor = () => {
         }}
       />
       <Column width="100%" marginTop="30px">
-        <HoverScaleBox onClick={() => {}}>Start</HoverScaleBox>
+        <HoverScaleBox
+          onClick={async () => {
+            if (!channelInfo?.channelId) {
+              return showToast('channel not exist');
+            }
+            const result = await setup({
+              channelId: channelInfo.channelId,
+              tokensInfo: {
+                tokenIn,
+                tokenOut,
+              },
+            });
+            if (result.data.data.success) {
+              changeEditing(false);
+              updateChannelInfo({
+                channelId: channelInfo.channelId,
+                from: tokenIn,
+                to: tokenOut,
+              });
+              showToast('edit success');
+            }
+          }}
+        >
+          Start
+        </HoverScaleBox>
       </Column>
       <Column width="100%" marginTop="1px">
-        <HoverScaleBox onClick={() => {}} background="transparent" boxShadow="">
+        <HoverScaleBox
+          onClick={() => {
+            updateTokenInfo(channelInfo?.from, 'in');
+            updateTokenInfo(channelInfo?.to, 'out');
+            changeEditing(false);
+          }}
+          background="transparent"
+          boxShadow=""
+        >
           Set up later
         </HoverScaleBox>
       </Column>

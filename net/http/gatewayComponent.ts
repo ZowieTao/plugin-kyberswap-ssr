@@ -1,3 +1,4 @@
+import { TokenInfo } from '@/constants';
 import { ChannelInfo } from '@/db';
 
 export type HttpResponseShape<T> = {
@@ -19,4 +20,16 @@ export type LoginResponse = HttpResponseShape<{
   starkKey: string;
   allowed: boolean;
   channelInfo: ChannelInfo | undefined;
+}>;
+
+export type SetupRequest = {
+  channelId: string;
+  tokensInfo: {
+    tokenIn?: TokenInfo;
+    tokenOut?: TokenInfo;
+  };
+};
+
+export type SetupResponse = HttpResponseShape<{
+  success: boolean;
 }>;

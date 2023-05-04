@@ -83,9 +83,10 @@ export default function Plugin() {
       });
   }, [provider]);
 
-  const isEditing = useTokenEditStore((state) => {
-    return state.editing;
+  const { editable, editing: isEditing } = useTokenEditStore((state) => {
+    return { editable: state.editable, editing: state.editing };
   });
+
   const changeEditing = useTokenEditStore((state) => {
     return state.changeEditing;
   });
@@ -147,30 +148,32 @@ export default function Plugin() {
                 height: '40px',
               }}
             >
-              <motion.div
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="rest"
-                onClick={() => {
-                  changeEditing();
-                }}
-              >
-                <Center
-                  height="40px"
-                  width="40px"
-                  background="#ffffff"
-                  boxShadow="0px 4px 12px rgba(0, 0, 0, 0.1)"
-                  borderRadius="12px"
-                  marginRight="10px"
+              {editable && (
+                <motion.div
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="rest"
+                  onClick={() => {
+                    changeEditing(true);
+                  }}
                 >
-                  <Image
-                    src="/assets/setting.svg"
-                    alt="background image"
-                    height="20"
-                    width="20"
-                  />
-                </Center>
-              </motion.div>
+                  <Center
+                    height="40px"
+                    width="40px"
+                    background="#ffffff"
+                    boxShadow="0px 4px 12px rgba(0, 0, 0, 0.1)"
+                    borderRadius="12px"
+                    marginRight="10px"
+                  >
+                    <Image
+                      src="/assets/setting.svg"
+                      alt="background image"
+                      height="20"
+                      width="20"
+                    />
+                  </Center>
+                </motion.div>
+              )}
               <ConnectButton label="Connect wallet" />
             </div>
           </motion.header>

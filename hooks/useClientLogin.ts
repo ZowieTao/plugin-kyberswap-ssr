@@ -1,9 +1,12 @@
 'use client';
 import { useAsyncEffect } from 'ahooks';
+import { produce } from 'immer';
 
 import { login } from '@/net/http/gateway';
 import { useAuthInfoStore } from '@/stores/authInfo';
 import { useChannelInfoStore } from '@/stores/channelInfo';
+import { useTokenEditStore } from '@/stores/tokenEdit';
+import { setAuthToken } from '@/utils/auth';
 
 export const useClientLogin = () => {
   const authInfo = useAuthInfoStore((state) => {
@@ -14,13 +17,33 @@ export const useClientLogin = () => {
     return state.updateChannelInfo;
   });
 
+  const updateTokenInfo = useTokenEditStore((state) => {
+    return state.updateTokenInfo;
+  });
+
   useAsyncEffect(async () => {
     if (authInfo?.code) {
       const loginResponse = await login({ code: authInfo.code });
 
-      if (loginResponse.data.data.channelInfo) {
-        updateChannelInfo(loginResponse.data.data.channelInfo);
+      const { data } = loginResponse.data;
+
+      updateChannelInfo({ ...data.channelInfo, channelId: data.channelId });
+
+      if (data.channelInfo) {
+        const { from, to } = data.channelInfo;
+        updateTokenInfo(from, 'in');
+        updateTokenInfo(to, 'out');
       }
+
+      if (data.token) {
+        setAuthToken(data.token);
+      }
+
+      useTokenEditStore.setState((state) => {
+        return produce(state, (draft) => {
+          draft.editable = data.allowed;
+        });
+      });
     }
   }, [authInfo]);
 };

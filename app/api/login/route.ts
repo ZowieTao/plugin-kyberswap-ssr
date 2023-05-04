@@ -7,6 +7,7 @@ import {
   validateChannelPermissions,
 } from '@/services/client/__plugin';
 import { AuthCodeRequestParams } from '@/services/client/pluginComponents';
+import { delay } from '@/utils/core/base';
 import { tokenSign } from '@/utils/jwt';
 
 export type HttpResponseShape<T> = {
@@ -21,15 +22,6 @@ enum ChannelPermissions {
   ManageChannels,
 }
 
-export const wait = (duration: number) => {
-  return new Promise((resolve) => {
-    const timer = setTimeout(() => {
-      clearTimeout(timer);
-      resolve(null);
-    }, duration);
-  });
-};
-
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as AuthCodeRequestParams;
@@ -39,6 +31,8 @@ export async function POST(req: NextRequest) {
 
     const { userId, address, channelId, serverId, starkKey } =
       authCodeResponse.data;
+    // todo
+    await delay(Math.floor(Math.random() * 100));
 
     const { data } = await validateChannelPermissions({
       channelId,

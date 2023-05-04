@@ -17,11 +17,8 @@ export async function tokenSign(userId: string) {
   return token;
 }
 
-export async function tokenVerify(userId: string, token: string) {
-  const { payload } = await jwtVerify(token, Secret, {
-    issuer: Issuer,
-    audience: userId,
-  });
+export async function tokenVerify(token: string) {
+  const result = await jwtVerify(token, Secret);
 
-  return payload.aud === userId;
+  return result;
 }

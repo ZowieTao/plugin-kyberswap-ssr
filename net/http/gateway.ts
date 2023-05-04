@@ -17,3 +17,11 @@ export function index() {
 export function login(req: components.LoginRequest) {
   return client.post<components.LoginResponse>('/api/login', req);
 }
+
+/**
+ * @description "Setup"
+ * @param req
+ */
+export function setup(req: components.SetupRequest) {
+  return client.post<components.SetupResponse>('/api/setup', req);
+}
