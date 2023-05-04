@@ -28,12 +28,9 @@ const useTokenBalances = (tokenAddresses: string[]) => {
       const listAccounts = await provider.listAccounts();
       const account = listAccounts[0];
       const nativeBalance = await provider.getBalance(account);
-      console.log('!!! 1 nativeBalance', nativeBalance);
 
       const fragment = erc20Interface.getFunction('balanceOf');
       const callData = erc20Interface.encodeFunctionData(fragment, [account]);
-
-      console.log('!!! 2 fragment,callData', fragment, callData);
 
       // const balance = useBalance();
 
@@ -48,13 +45,10 @@ const useTokenBalances = (tokenAddresses: string[]) => {
         false,
         chunks,
       );
-      console.log('!!! 3 res', res);
 
       const balances = res.returnData.map((item: any) => {
         return erc20Interface.decodeFunctionResult(fragment, item.returnData);
       });
-
-      console.log('!!! 4 balances', balances);
 
       setLoading(false);
 
