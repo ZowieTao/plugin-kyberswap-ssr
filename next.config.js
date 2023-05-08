@@ -1,17 +1,18 @@
 /** @type {import('next').NextConfig} */
 
-const dotenv = require('dotenv');
+const dotenv = require('dotenv-flow');
 
 const loadEnv = () => {
   const env = {
     NEXT_PUBLIC_APP_ENV: process.env.APP_ENV || process.env.NODE_ENV,
   };
   const loaded = dotenv.config({
-    path: `.env.${env.NEXT_PUBLIC_APP_ENV}`,
+    node_env: process.env.APP_ENV || process.env.NODE_ENV || 'development',
     silent: true,
   });
+  
   Object.keys(process.env).forEach((key) => {
-    if (key.startsWith('NEXT_PUBLIC_')) {
+    if (key.startsWith('NEXT_PUBLIC_')) { 
       env[key] = loaded.parsed[key];
     }
   });
@@ -20,6 +21,7 @@ const loadEnv = () => {
 };
 
 const nextConfig = {
+  output: 'export',
   env: loadEnv(),
   reactStrictMode: false,
   experimental: {
@@ -55,8 +57,6 @@ const nextConfig = {
     disableStaticImages: true,
     unoptimized: true,
   },
-  output: 'export',
-  distDir: 'out',
 };
 
 module.exports = nextConfig;

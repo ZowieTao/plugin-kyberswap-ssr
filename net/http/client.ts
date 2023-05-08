@@ -54,7 +54,7 @@ export type Client = {
 };
 
 const instance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_APP_URI,
+  baseURL: process.env.NEXT_PUBLIC_API_HOST,
 });
 
 applyAuthTokenInterceptor(instance);

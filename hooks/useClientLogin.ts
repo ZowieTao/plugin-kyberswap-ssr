@@ -2,8 +2,9 @@
 import { useAsyncEffect } from 'ahooks';
 import { produce } from 'immer';
 
+import { showToast } from '@/components/dialogs/toast/toast';
 import { useImportedTokens } from '@/components/widgets/hooks/useTokens';
-import { login } from '@/net/http/gateway';
+import { login } from '@/net/http/kyberswap';
 import { useAuthInfoStore } from '@/stores/authInfo';
 import { useChannelInfoStore } from '@/stores/channelInfo';
 import { useTokenEditStore } from '@/stores/tokenEdit';
@@ -28,25 +29,26 @@ export const useClientLogin = () => {
     if (authInfo?.code) {
       const loginResponse = await login({ code: authInfo.code });
 
-      const { data } = loginResponse.data;
+      const { token, from, to, manageable } = loginResponse.data;
 
-      updateChannelInfo({ ...data.channelInfo, channelId: data.channelId });
+      updateChannelInfo({ from, to });
 
-      if (data.channelInfo) {
-        const { from, to } = data.channelInfo;
+      if (loginResponse.data) {
+        setAuthToken(token);
+
         updateTokenInfo(from, 'in');
         updateTokenInfo(to, 'out');
         from && addToken(from);
         to && addToken(to);
       }
 
-      if (data.token) {
-        setAuthToken(data.token);
-      }
-
       useTokenEditStore.setState((state) => {
         return produce(state, (draft) => {
-          draft.editable = data.allowed;
+          draft.editable = manageable;
+          if (manageable && !from && !to) {
+            showToast('set token first');
+            draft.editing = true;
+          }
         });
       });
     }

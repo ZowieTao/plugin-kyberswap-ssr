@@ -10,7 +10,6 @@ import { ThemeProvider } from 'styled-components';
 import { useAccount, useNetwork } from 'wagmi';
 
 import Widget from '@/components/widgets';
-import { TokenInfo } from '@/constants';
 import { defaultTokenOut } from '@/constants/kyberswap';
 import { widgetLightTheme } from '@/constants/style/kyberswap-widget';
 import { useClientLogin } from '@/hooks/useClientLogin';
@@ -39,16 +38,6 @@ export default function Plugin() {
   const channelInfo = useChannelInfoStore((state) => {
     return state.channelInfo;
   });
-
-  const tokenList = useMemo(() => {
-    const result: TokenInfo[] = [];
-    channelInfo?.from && result.push({ ...channelInfo.from, isImport: true });
-    channelInfo?.to && result.push({ ...channelInfo.to, isImport: true });
-
-    return [];
-
-    return result;
-  }, [channelInfo]);
 
   const _defaultTokenIn = useMemo(() => {
     return channelInfo?.from?.address;
@@ -156,7 +145,10 @@ export default function Plugin() {
                   whileHover="hover"
                   whileTap="rest"
                   onClick={() => {
-                    changeEditing(true);
+                    changeEditing();
+                  }}
+                  style={{
+                    cursor: 'pointer',
                   }}
                 >
                   <Center
@@ -192,7 +184,7 @@ export default function Plugin() {
             }}
           >
             <Web3Provider provider={provider}>
-              <TokenListProvider tokenList={tokenList}>
+              <TokenListProvider tokenList={[]}>
                 <ThemeProvider theme={widgetLightTheme || defaultTheme}>
                   <>
                     {isEditing ? (

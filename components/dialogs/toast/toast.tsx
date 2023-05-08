@@ -3,17 +3,25 @@ import { produce } from 'immer';
 import { Center } from '@/components/core/Flex';
 import useLatest from '@/hooks/core/useLatest';
 import { isNotEmpty } from '@/utils/core/is';
+import { isString } from '@/utils/is';
 
 import { useToastStore } from './store';
 
 let preTimer: any = undefined;
 
-export const showToast = (text: string, props?: { duration: number }) => {
-  const { duration = 2000 } = props ?? {};
+export const showToast = (
+  content: string | JSX.Element,
+  props?: { duration: number },
+) => {
+  const { duration = 3000 } = props ?? {};
   clearTimeout(preTimer);
   useToastStore.setState((state) => {
     return produce(state, (draft) => {
-      draft.content = text.trim();
+      if (isString(content)) {
+        draft.content = content.trim();
+      } else {
+        draft.content = content;
+      }
     });
   });
   preTimer = setTimeout(() => {
@@ -30,11 +38,11 @@ export const hideToast = () => {
 };
 
 export const Toast = () => {
-  const text = useToastStore((state) => {
+  const content = useToastStore((state) => {
     return state.content;
   });
-  const show = isNotEmpty(text);
-  const info = useLatest(text, { acceptEmpty: false });
+  const show = isNotEmpty(content);
+  const info = useLatest(content, { acceptEmpty: false });
 
   return (
     <Center

@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { create } from 'zustand';
 
 export interface IToast {
-  content: string;
+  content: string | JSX.Element;
   id: string | number;
   openToast: (props: { content: string; id?: string | number }) => void;
   clearToast: () => void;

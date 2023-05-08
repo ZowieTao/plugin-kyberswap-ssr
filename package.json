@@ -6,6 +6,8 @@
     "pull": "git pull && yarn",
     "dev": "next dev -p 1110",
     "build": "next build",
+    "build:dev": "APP_ENV=development yarn build",
+    "build:staging": "APP_ENV=staging yarn build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -15,7 +17,7 @@
     "@rainbow-me/rainbowkit": "^0.11.0",
     "@reach/portal": "^0.18.0",
     "ahooks": "^3.7.4",
-    "dotenv": "^16.0.3",
+    "dotenv-flow": "^3.2.0",
     "encoding": "^0.1.13",
     "ethers": "^5.7.0",
     "immer": "^10.0.1",

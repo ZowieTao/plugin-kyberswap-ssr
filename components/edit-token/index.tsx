@@ -1,12 +1,15 @@
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 import { shallow } from 'zustand/shallow';
 
 import { Text } from '@/components/core/Text';
-import { setup } from '@/net/http/gateway';
+import {
+  deletePresetTokenPair,
+  modifyPresetTokenPair,
+} from '@/net/http/kyberswap';
 import { useChannelInfoStore } from '@/stores/channelInfo';
 import { useTokenEditStore } from '@/stores/tokenEdit';
 import { hexWithOpacity } from '@/utils/core/format';
@@ -63,6 +66,10 @@ const TokenEditor = () => {
 
   const [type, setType] = useState<'in' | 'out' | undefined>();
 
+  const deletable = useMemo(() => {
+    return channelInfo?.from || channelInfo?.to;
+  }, [channelInfo?.from, channelInfo?.to]);
+
   return (
     <Column
       zIndex="1"
@@ -116,44 +123,63 @@ const TokenEditor = () => {
       <Column width="100%" marginTop="30px">
         <HoverScaleBox
           onClick={async () => {
-            if (!channelInfo?.channelId) {
-              return showToast('Channel Not Exist');
-            }
-            const result = await setup({
-              channelId: channelInfo.channelId,
-              tokensInfo: {
-                tokenIn,
-                tokenOut,
-              },
+            const result = await modifyPresetTokenPair({
+              from: tokenIn,
+              to: tokenOut,
             });
-            if (result.data.data.success) {
+
+            if (!result.message) {
               changeEditing(false);
               tokenIn && addToken(tokenIn);
               tokenOut && addToken(tokenOut);
               updateChannelInfo({
-                channelId: channelInfo.channelId,
                 from: tokenIn,
                 to: tokenOut,
               });
               showToast('Edit Success');
+            } else {
+              showToast(result.message);
             }
           }}
         >
-          Start
+          {deletable ? 'Set' : 'Start'}
         </HoverScaleBox>
       </Column>
       <Column width="100%" marginTop="1px">
-        <HoverScaleBox
-          onClick={() => {
-            updateTokenInfo(channelInfo?.from, 'in');
-            updateTokenInfo(channelInfo?.to, 'out');
-            changeEditing(false);
-          }}
-          background="transparent"
-          boxShadow=""
-        >
-          Set up later
-        </HoverScaleBox>
+        {deletable ? (
+          <HoverScaleBox
+            onClick={async () => {
+              await deletePresetTokenPair().catch((error) => {
+                console.error(error);
+                showToast('something went wrong, please try again later');
+              });
+
+              updateChannelInfo({
+                from: undefined,
+                to: undefined,
+              });
+              updateTokenInfo(undefined, 'in');
+              updateTokenInfo(undefined, 'out');
+              changeEditing(false);
+            }}
+            background="transparent"
+            boxShadow=""
+          >
+            <Text color="#FF5348">clear token setting</Text>
+          </HoverScaleBox>
+        ) : (
+          <HoverScaleBox
+            onClick={() => {
+              updateTokenInfo(channelInfo?.from, 'in');
+              updateTokenInfo(channelInfo?.to, 'out');
+              changeEditing(false);
+            }}
+            background="transparent"
+            boxShadow=""
+          >
+            Set up later
+          </HoverScaleBox>
+        )}
       </Column>
     </Column>
   );

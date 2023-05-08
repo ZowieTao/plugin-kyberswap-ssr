@@ -1,7 +1,12 @@
 import { produce } from 'immer';
 import { create } from 'zustand';
 
-import { ChannelInfo } from '@/db';
+import { Token } from '@/net/http/kyberswapComponents';
+
+export type ChannelInfo = {
+  from?: Token;
+  to?: Token;
+};
 
 export interface IChannelInfo {
   channelInfo: ChannelInfo | undefined;

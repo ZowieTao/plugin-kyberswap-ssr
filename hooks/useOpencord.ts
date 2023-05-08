@@ -22,12 +22,9 @@ class OpencordHelper {
       const oc = getClient({
         debug: process.env.NODE_ENV === 'development',
       });
-      // todo
       this.initialized = true;
-      // this.inOpencord = oc.platform !== 'unknown';
-      this.inOpencord = true;
-      // this.initFailed = oc.version === '';
-      this.initFailed = false;
+      this.inOpencord = oc.platform !== 'unknown';
+      this.initFailed = oc.version === '';
 
       if (!this.initFailed) {
         this.client = oc;
@@ -60,22 +57,11 @@ export const useOpencord = () => {
       opencordHelper.inOpencord &&
       !opencordHelper.getCoding
     ) {
-      // todo
       opencordHelper.getCoding = true;
-      // const {
-      //   code: _,
-      //   message: __,
-      //   data,
-      // } = await opencordHelper.client.getCode();
       const {
         code: _,
         message: __,
-        data = {
-          code: 'this is code from oc project',
-          address: '0x123321123',
-          userId: 'this is user id ',
-          channelId: 'this is channel id ',
-        },
+        data,
       } = await opencordHelper.client.getCode();
 
       opencordHelper.getCoding = false;
