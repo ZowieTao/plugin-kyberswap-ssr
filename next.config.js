@@ -21,7 +21,7 @@ const loadEnv = () => {
 };
 
 const nextConfig = {
-  output: 'export',
+  output: 'standalone',
   env: loadEnv(),
   reactStrictMode: false,
   experimental: {
