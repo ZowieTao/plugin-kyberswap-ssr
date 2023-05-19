@@ -7,7 +7,8 @@
     "dev": "next dev -p 1110",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "spell-check": "cspell lint . --no-progress"
   },
   "dependencies": {
     "@opencord/client": "^0.0.10",
@@ -15,6 +16,7 @@
     "@rainbow-me/rainbowkit": "^0.11.0",
     "@reach/portal": "^0.18.0",
     "ahooks": "^3.7.4",
+    "cspell": "^6.31.1",
     "dotenv": "^16.0.3",
     "encoding": "^0.1.13",
     "ethers": "^5.7.0",
